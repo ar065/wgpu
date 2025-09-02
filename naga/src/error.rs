@@ -48,6 +48,10 @@ impl fmt::Display for ShaderError<crate::WithSpan<crate::valid::ValidationError>
             let mut writer = DiagnosticBuffer::new();
             term::emit(
                 writer.inner_mut(),
+                {
+                   let mut no_color = termcolor::NoColor::new(writer.inner_mut());
+                   no_color
+                },
                 &config,
                 &files,
                 &self.inner.diagnostic(),
