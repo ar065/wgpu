@@ -109,8 +109,11 @@ impl ParseError {
         let config = term::Config::default();
 
         let mut writer = crate::error::DiagnosticBuffer::new();
-        term::emit(writer.inner_mut(), &config, &files, &self.diagnostic())
-            .expect("cannot write error");
+        {
+            let mut no_color = termcolor::NoColor::new(writer.inner_mut());
+            term::emit(&mut no_color, &config, &files, &self.diagnostic())
+        }
+        .expect("cannot write error");
         writer.into_string()
     }
 
